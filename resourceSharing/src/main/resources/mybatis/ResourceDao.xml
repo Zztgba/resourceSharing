@@ -19,6 +19,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="resourceDetail" resultType="priv.luruidi.bean.Resource">
-		select * from resource where id=#{resourceId} error
+		select * from resource where id=#{resourceId}
 	</select>
 </mapper>
