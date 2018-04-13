@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd">
+  	<!-- 配置扫描注解的父包 -->
+  	<context:component-scan base-package="priv.luruidi">
+  		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+  	</context:component-scan>
+  	<!-- 引入资源文件 -->
+  	<context:property-placeholder file-encoding="utf-8" location="classpath:jdbc.properties"/>
+  	<!-- 配置数据源 -->
+  	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+  		<property name="driverClassName" value="${driver}"></property>
+  		<property name="url" value="${url}"></property>
+  		<property name="username" value="${user}"></property>
+  		<property name="password" value="${password}"></property>
+  	</bean>
+  	<!-- 配置事务管理器 -->
+  	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  		<property name="dataSource" ref="dataSource"></property>
+  	</bean>  
+  	<!-- 配置事务AOP切点 -->	
+  	 <aop:config>
+	  	<aop:pointcut expression="execution(* priv.luruidi.service..*.*(..))" id="txPointcut"/>
+	  	<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+	  </aop:config> 
+	 <!-- 事务增强 -->
+	  <tx:advice id="txAdvice" transaction-manager="transactionManager">
+	  	<tx:attributes>
+  			<tx:method name="find*" read-only="true" propagation="NOT_SUPPORTED"/>
+  			<tx:method name="get*" read-only="true" propagation="NOT_SUPPORTED"/>
+  			<tx:method name="query*" read-only="true" propagation="NOT_SUPPORTED"/>
+  			<tx:method name="*"  propagation="REQUIRED" rollback-for="java.lang.Exception"/>
+	  	</tx:attributes>
+	  </tx:advice> 
+	  
+	  
+	  
+	  
+	  <!-- mybatis和spring集成配置 -->
+	  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  	<property name="dataSource" ref="dataSource"></property>
+	  	<!-- 配置 mybatis全局配置文件-->
+	  	<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
+	  </bean>
+	  <!-- 配置扫描的包 -->
+	  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	  	<property name="basePackage" value="priv.luruidi.dao"></property>
+	  	<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	  </bean>
+	  <!-- spring管理sqlSessionTemplate对象 -->	
+	<!-- <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+	</bean>	  --> 
+</beans>
+
+
+
+
+
+
+

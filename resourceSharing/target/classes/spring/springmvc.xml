@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	<context:component-scan base-package="priv.luruidi.controller" use-default-filters="false">
+  		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+  	</context:component-scan>
+  	<!-- 配置视图解析器 -->
+  	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+  		<property name="prefix" value="/WEB-INF/jsp/"></property>
+  		<property name="suffix" value=".jsp"></property>
+  	</bean>
+  	<mvc:annotation-driven></mvc:annotation-driven>
+  	<!-- <mvc:annotation-driven conversion-service="conversionService"></mvc:annotation-driven> -->
+  	<!-- 时间转换器 -->
+  	<!-- <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+  		<property name="converters">
+  			<set>
+  				<bean class="cn.soft863.converter.DateConverter"></bean>
+  			</set>
+  		</property>
+  	</bean> -->
+  	<!-- 配置spring异常处理器 -->
+  	<!-- <bean class="cn.soft863.Exception.ItemsExceptionResolver"></bean> -->
+  	<!-- 文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 设置上传文件的最大尺寸为50MB -->
+		<property name="maxUploadSize">
+			<value>52428800</value>
+		</property>
+	</bean>
+	 <mvc:interceptors>
+		 <!--使用bean定义一个Interceptor，直接定义在mvc:interceptors根下面的Interceptor将拦截所有的请求
+         <bean class="priv.luruidi.interceptor.LoginInterceptor"/>
+         <mvc:interceptor>
+             <mvc:mapping path="/**/*"/>
+             <mvc:exclude-mapping path="/items/queryAll.action"/>
+             定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的
+             <bean class="priv.luruidi.interceptor.LoginInterceptor"/>
+         </mvc:interceptor> -->
+		 <mvc:interceptor>
+             <mvc:mapping path="/ForwordController/upload.action"/>
+             <mvc:mapping path="/UserController/queryMyself.action"/>
+             <mvc:mapping path="/CollectController/queryCollectList.action"/>
+             <mvc:mapping path="/ScoreController/queryScoreByUserid.action"/>
+			 <bean class="priv.luruidi.interceptor.LoginInterceptor"></bean>
+		 </mvc:interceptor>
+    </mvc:interceptors>
+	<!-- 配置解析器 ,供特殊功能使用，比如下载-->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+		<!-- 通过 order 属性来定义视图解析器的优先级, order 值越小优先级越高 ，否则默认配置的视图解析器会优先-->
+		<property name="order" value="3"></property>
+	</bean>
+</beans>
+
+
+
+
+
+
+

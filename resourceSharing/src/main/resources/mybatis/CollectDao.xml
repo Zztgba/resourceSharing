@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="priv.luruidi.dao.CollectDao">
+	<insert id="saveCollect">
+		insert into collect
+		values(#{id},#{userid},#{resourceid},#{collecttime})
+	</insert>
+	<select id="queryCollectListCount" resultType="int">
+		select count(id) from collect where userid=#{userId}
+	</select>
+	<select id="queryCollectList" resultType="map">
+		select
+		r.id,r.type,r.name resourceName,r.score,u.name userName,r.uploadtime,c.collecttime
+		from collect c left join resource r
+		on c.resourceid=r.id
+		left join user u
+		on u.id=r.userid
+		where c.userid=#{0}
+		limit #{1.begin},#{1.pageSize}
+	</select>
+	<select id="countResource" resultType="int">
+		select count(id) from collect where userid=#{arg0} and resourceid=#{arg1}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+

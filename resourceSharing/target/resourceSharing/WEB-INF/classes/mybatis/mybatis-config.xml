@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration 
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 给实体类配置别名 -->
+	<typeAliases>
+		<!-- 实体类默认的别名是实体类名首字符小写 ,如果有注解方式的别名，注解优先于xml配置-->
+		<package name="priv.luruidi.bean"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mybatis/UserDao.xml"/>
+		<mapper resource="mybatis/CollectDao.xml"/>
+		<mapper resource="mybatis/CommentDao.xml"/>
+		<mapper resource="mybatis/ResourceDao.xml"/>
+		<mapper resource="mybatis/ScoreDao.xml"/>
+		<mapper resource="mybatis/BbsDao.xml"/>
+		<mapper resource="mybatis/BbsCommentDao.xml"/>
+	</mappers>
+</configuration>

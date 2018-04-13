@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="priv.luruidi.dao.ScoreDao">
+	<select id="queryScoreByUserid" resultType="score">
+		select s.score score,s.scoredate,s.scoresource
+		from score s left join user u
+		on s.userid=u.id where u.id=#{userid}
+	</select>
+	<insert id="saveScoreByUserid">
+		insert into score values(#{id},#{userid},#{score},#{scoredate},#{scoresource})
+	</insert>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="priv.luruidi.dao.BbsDao">
+    <resultMap id="bbsVoMap" type="priv.luruidi.bean.vo.BbsVo">
+        <id column="id" property="id"></id>
+        <result column="notesort" property="notesort"></result>
+        <result column="notename" property="notename"></result>
+        <result column="notecontent" property="notecontent"></result>
+        <result column="notetime" property="notetime"></result>
+        <result column="name" property="name"></result>
+    </resultMap>
+    <insert id="saveBbs" parameterType="priv.luruidi.bean.Bbs">
+        insert into bbs value(#{id},#{notesort},#{notename},#{notecontent},#{notetime},#{userid})
+    </insert>
+
+    <select id="queryBbsList" parameterType="priv.luruidi.util.Page" resultType="priv.luruidi.bean.vo.BbsVo">
+        select bbs.id,bbs.notesort,bbs.notename,bbs.notecontent,bbs.notetime,user.name from bbs left join user on bbs.userid=user.id order by bbs.notetime desc limit #{begin},#{pageSize}
+    </select>
+
+    <select id="queryBbsListCount" resultType="int">
+        select count(id) from bbs
+    </select>
+    
+    <select id="bbsDetail" resultType="priv.luruidi.bean.Bbs">
+        select * from bbs where id=#{id}
+    </select>
+</mapper>

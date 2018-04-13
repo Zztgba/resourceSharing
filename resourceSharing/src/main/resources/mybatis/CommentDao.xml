@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="priv.luruidi.dao.CommentDao">
+	<select id="queryComments" resultType="map">
+		select c.content,c.star,c.createTime,u.name,u.image
+		from comment c left join user u
+		on c.userid=u.id
+		where
+		c.resourceid=#{resourceId} order by c.createTime desc
+	</select>
+	<insert id="saveComment">
+		insert into comment values(#{id},#{content},#{star},#{resourceid},#{userid},#{createTime})
+	</insert>
+	<select id="countCommentsByResourceIdAndUserId" resultType="int">
+		select count(id) from comment where resourceid=#{arg0} and userid=#{arg1}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
