@@ -49,7 +49,7 @@
 			</tbody>
 		</table>
 		
-		<div class="panigation">
+		<%--<div class="panigation">
 			<a>上一页</a>
 			<a>1</a>
 			<a>2</a>
@@ -57,7 +57,7 @@
 			<a>4</a>
 			<a>5</a>
 			<a>下一页></a>
-		</div>
+		</div>--%>
 	</div>
 </body>
 </html>

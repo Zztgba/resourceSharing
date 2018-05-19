@@ -21,7 +21,8 @@
                     <input type="text" id="username" class="inp user" name="name" placeholder="请输入用户名" />
                     <input type="password" id="password" class="inp pass" name="password" placeholder="请输入密码" />
                     <b id="err" style="position: absolute;left: 30px;color: red">${mes }</b>
-                    <a href="findpass.html" class="find_pass">忘记密码，立即找回</a>
+                    <br/>
+                    <%--<a href="findpass.html" class="find_pass">忘记密码，立即找回</a>--%>
                     <input type="submit" class="su_btn" value="登录" />
                     <a href="${pageContext.request.contextPath }/ForwordController/register.action" class="reg">注册</a>
                 </form>
@@ -34,8 +35,8 @@
     <!-- 网站头信息-->
     <div id="nav">
         <div id="search">
-            <input type="text" name="name" />
-            <a class="btn" >搜索</a>
+            <input id="resourceName" type="text" name="name" value="${name}"/>
+            <a id="find" class="btn" >搜索</a>
         </div>
 
         <div id="logon">
@@ -86,13 +87,24 @@
 		</c:forEach>
 
 
-		<div class="panigation">
-			<a href="${pageContext.request.contextPath }/ResourceController/queryResource.action?currentPage=1">首页</a>
-			<c:forEach begin="1" end="${page.totalPage}" varStatus="loop">
-                <a href="${pageContext.request.contextPath }/ResourceController/queryResource.action?currentPage=${loop.index}">${loop.index}</a>
-            </c:forEach>
-			<a href="${pageContext.request.contextPath }/ResourceController/queryResource.action?currentPage=${page.totalPage}">尾页</a>
-		</div>
+        <c:if test="${flag=='notLikeQuery'}">
+            <div class="panigation">
+                <a href="${pageContext.request.contextPath }/ResourceController/queryResource.action?currentPage=1">首页</a>
+                <c:forEach begin="1" end="${page.totalPage}" varStatus="loop">
+                    <a href="${pageContext.request.contextPath }/ResourceController/queryResource.action?currentPage=${loop.index}">${loop.index}</a>
+                </c:forEach>
+                <a href="${pageContext.request.contextPath }/ResourceController/queryResource.action?currentPage=${page.totalPage}">尾页</a>
+            </div>
+        </c:if>
+        <c:if test="${flag=='likeQuery'}">
+            <div class="panigation">
+                <a href="${pageContext.request.contextPath }/ResourceController/likeQueryResourceListByName.action?name=${name}&&currentPage=1">首页</a>
+                <c:forEach begin="1" end="${page.totalPage}" varStatus="loop">
+                    <a href="${pageContext.request.contextPath }/ResourceController/likeQueryResourceListByName.action?name=${name}&&currentPage=${loop.index}">${loop.index}</a>
+                </c:forEach>
+                <a href="${pageContext.request.contextPath }/ResourceController/likeQueryResourceListByName.action?name=${name}&&currentPage=${page.totalPage}">尾页</a>
+            </div>
+        </c:if>
     </div>
 
     <script>
@@ -106,6 +118,14 @@
             var div = document.getElementById("cvs2_logon");
             div.style = 'display:none' ;
         }
+        $(function(){
+            $("#find").click(function () {
+                var resourceName=$("#resourceName").val();
+                if(resourceName!=null&&resourceName!=""){
+                    window.location.href="${pageContext.request.contextPath}/ResourceController/likeQueryResourceListByName.action?name="+resourceName;
+                }
+            });
+        });
     </script>
     <c:if test="${flag=='success' }">
 		<script type="text/javascript">

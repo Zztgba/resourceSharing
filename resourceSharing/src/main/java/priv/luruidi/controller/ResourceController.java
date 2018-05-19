@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -20,7 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import priv.luruidi.bean.Resource;
+import priv.luruidi.bean.Score;
 import priv.luruidi.bean.User;
+import priv.luruidi.dao.CommentDao;
+import priv.luruidi.dao.ResourceDao;
+import priv.luruidi.dao.ScoreDao;
 import priv.luruidi.service.CommentService;
 import priv.luruidi.service.ResourceService;
 import priv.luruidi.util.Page;
@@ -38,6 +43,12 @@ public class ResourceController {
 	private ResourceService resourceService;
 	@javax.annotation.Resource
 	private CommentService commentService;
+	@javax.annotation.Resource
+    private ScoreDao scoreDao;
+	@javax.annotation.Resource
+    private ResourceDao resourceDao;
+	@javax.annotation.Resource
+    private CommentDao commentDao;
 	@RequestMapping("/saveResource")
 	public void saveResource(MultipartFile filePath,Resource resource,HttpServletResponse response,HttpSession session) throws Exception{
 		String oldName = filePath.getOriginalFilename();
@@ -67,6 +78,12 @@ public class ResourceController {
 		resource.setDownloadTimes(0);
 		Integer count = resourceService.saveResource(resource);
 		if(count==1){
+            Score score = new Score();
+            score.setUserid(user.getId());
+            score.setScore(resource.getScore());
+            score.setScoredate(new Date());
+            score.setScoresource("上传名字为"+resource.getName()+"的资源");
+            scoreDao.saveScoreByUserid(score);
 			response.sendRedirect("../ResourceController/queryResource.action");
 		}
 	}
@@ -82,6 +99,7 @@ public class ResourceController {
 		Page page=new Page(totalCount,currentPage,5);
 		ModelAndView modelAndView=new ModelAndView();
 		List<Map<String, Object>>  resourceList = resourceService.queryResource(page);
+        modelAndView.addObject("flag","notLikeQuery");
 		modelAndView.addObject("resourceList", resourceList);
 		modelAndView.addObject("page", page);
 		modelAndView.setViewName("index");
@@ -95,14 +113,16 @@ public class ResourceController {
 		modelAndView.addObject("resource", resource);
 		modelAndView.addObject("keywords", keywords);
 		modelAndView.setViewName("detail");
-		List<Map<String,String>> commentsList = commentService.queryComments(resourceId);
+        Integer star = commentDao.queryAvgStar(resourceId);
+        modelAndView.addObject("star",star);
+        List<Map<String,String>> commentsList = commentService.queryComments(resourceId);
 		modelAndView.addObject("commentsList", commentsList);
 		return modelAndView;
 	}
 	@RequestMapping("/downloadResource")
 	public ResponseEntity<byte[]> downloadResource(Integer resourceid) throws Exception{
 		Resource resource = resourceService.resourceDetail(resourceid);
-		String filepath = resource.getFilepath();
+        String filepath = resource.getFilepath();
 		//把保存在数据库的文件名字里的时间戳截掉
 		String resourceName = filepath.substring(13);
 		byte[] body=null;
@@ -119,4 +139,22 @@ public class ResourceController {
 		ResponseEntity<byte[]> responseEntity=new ResponseEntity<byte[]>(body, headers, status);
 		return responseEntity;
 	}
+	@RequestMapping("/likeQueryResourceListByName")
+	public ModelAndView likeQueryResourceListByName(Resource resource,Integer currentPage){
+        //默认当前页为1
+        if(currentPage==null){
+            currentPage=1;
+        }
+        Integer totalCount = resourceDao.countLikeQueryResourceListByName(resource);
+        //创建分页对象
+        Page page=new Page(totalCount,currentPage,5);
+        List<Map<String, Object>> resourceList = resourceDao.likeQueryResourceListByName(page, resource);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("flag","likeQuery");
+        modelAndView.addObject("name",resource.getName());
+        modelAndView.addObject("resourceList", resourceList);
+        modelAndView.addObject("page", page);
+        modelAndView.setViewName("index");
+        return modelAndView;
+    }
 }

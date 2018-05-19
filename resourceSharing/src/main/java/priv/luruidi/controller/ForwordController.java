@@ -31,4 +31,19 @@ public class ForwordController {
 	public String bbs(){
 		return "bbs";
 	}
+
+    @RequestMapping("/backIndex")
+    public String backIndex(){
+        return "backIndex";
+    }
+
+	@RequestMapping("/manager")
+	public String manager(){
+		return "manager";
+	}
+
+    @RequestMapping("/source")
+    public String source(){
+        return "resourceCheck";
+    }
 }

@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import priv.luruidi.bean.Bbs;
+import priv.luruidi.bean.BbsCommentReply;
 import priv.luruidi.bean.User;
+import priv.luruidi.bean.vo.BbsCommentReplyVo;
 import priv.luruidi.bean.vo.BbsCommentVo;
 import priv.luruidi.bean.vo.BbsVo;
+import priv.luruidi.service.BbsCommentReplyService;
 import priv.luruidi.service.BbsCommentService;
 import priv.luruidi.service.BbsService;
 import priv.luruidi.util.Page;
@@ -30,6 +33,8 @@ public class BbsController {
     private BbsService bbsService;
     @Autowired
     private BbsCommentService bbsCommentService;
+    @Autowired
+    private BbsCommentReplyService bbsCommentReplyService;
     @RequestMapping("/saveBbs")
     @ResponseBody
     public void saveBbs(Bbs bbs, HttpServletResponse response, HttpSession session) throws Exception{
@@ -49,7 +54,7 @@ public class BbsController {
         }
         ModelAndView modelAndView=new ModelAndView();
         Integer count= bbsService.queryBbsListCount();
-        Page page =new Page(count,currentPage,3);
+        Page page =new Page(count,currentPage,6);
         List<BbsVo> list=bbsService.queryBbsList(page);
         modelAndView.addObject("list", list);
         modelAndView.addObject("page", page);
@@ -67,7 +72,17 @@ public class BbsController {
         }
         Integer count=bbsCommentService.countBbsCommentList(id);
         Page page=new Page(count,currentPage,2);
+        //查询帖子评论
         List<BbsCommentVo> list=bbsCommentService.queryBbsCommentList(id,page);
+        //查询帖子评论回复
+        for(BbsCommentVo bbsCommentVo:list){
+            BbsCommentReply bbsCommentReply = new BbsCommentReply();
+            bbsCommentReply.setCommentid(bbsCommentVo.getId());
+            int num = bbsCommentReplyService.countReplys(bbsCommentReply);
+            bbsCommentVo.setCount(num);
+            List<BbsCommentReplyVo> bbsCommentReplyVoList = bbsCommentReplyService.queryBbsCommentReplyVoList(bbsCommentReply);
+            bbsCommentVo.setList(bbsCommentReplyVoList);
+        }
         modelAndView.addObject("list",list);
         modelAndView.addObject("page", page);
         modelAndView.addObject("bbs",bbs);

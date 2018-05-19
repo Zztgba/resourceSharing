@@ -3,6 +3,7 @@ package priv.luruidi.dao;
 import java.util.List;
 
 import priv.luruidi.bean.Score;
+import priv.luruidi.bean.User;
 
 /**
  * @author 卢瑞迪
@@ -13,4 +14,5 @@ import priv.luruidi.bean.Score;
 public interface ScoreDao {
 	public List<Score> queryScoreByUserid(Integer userid);
 	public Integer saveScoreByUserid(Score score);
+	Integer queryCountScoreByUserid(User user);
 }

@@ -17,4 +17,7 @@ public interface ResourceDao {
 	Integer queryResourceCount();
 	List<Map<String,Object>> queryResource(Page page);
 	Resource resourceDetail(Integer resourceId);
+	int updateResourceById(Resource resource);
+	Integer countLikeQueryResourceListByName(Resource resource);
+    List<Map<String,Object>> likeQueryResourceListByName(Page page,Resource resource);
 }

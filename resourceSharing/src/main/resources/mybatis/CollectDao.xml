@@ -22,10 +22,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		limit #{1.begin},#{1.pageSize}
 	</select>
 	<select id="countResource" resultType="int">
-		select count(id) from collect where userid=#{arg0} and resourceid=#{arg1}
+		select count(id) from collect where userid=#{0} and resourceid=#{1}
 	</select>
-</mapper>
 
+</mapper>
 
 
 

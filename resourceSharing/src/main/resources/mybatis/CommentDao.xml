@@ -17,6 +17,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="countCommentsByResourceIdAndUserId" resultType="int">
 		select count(id) from comment where resourceid=#{0} and userid=#{1}
 	</select>
+	<select id="queryAvgStar" resultType="int">
+		SELECT
+	    avg(star)
+        FROM
+	    COMMENT
+        WHERE
+	    resourceid = #{resourid}
+	</select>
 </mapper>
 
 

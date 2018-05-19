@@ -10,6 +10,14 @@
 	<script src="${pageContext.request.contextPath }/js/jquery-3.2.1.min.js"></script>
 	<script type="application/javascript" src="${pageContext.request.contextPath}/js/xcConfirm.js"></script>
 	<script type="application/javascript" src="${pageContext.request.contextPath}/js/common.js"></script>
+    <style>
+        .huifulist{
+            display: none;
+            padding: 20px;
+            margin-left: 200px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+    </style>
     <title>论坛</title>
 </head>
 <body>
@@ -47,20 +55,33 @@
                     <div class="rf">
                         <div>
                             <span>发表于 <fmt:formatDate value="${bbsComment.commenttime}" pattern="yyyy-MM-dd HH:mm:ss"/> </span>
-                            <span>1楼</span>
+                            <span><%--1楼--%></span>
                         </div>
                         <div class="cts">
                             ${bbsComment.commentcontent}
                         </div>
                         <div>
 						<span>
-							<a href="javascript:void(0);" onClick="replay(this)">回复</a>
-							<b><input type="text" name="" /><a href="javascript:void(0);">提交</a></b>
+							<a href="javascript:void(0);" >回复</a>
+							<input type="text" name="" placeholder="回复内容"/><a id="${bbsComment.id}" onclick="replays(this)">提交</a>
 						</span>
-                            <span><a>共23条评论，点击查看</a></span>
+                            <span id="${bbsComment.id}" onClick="replay(this)"><a>共${bbsComment.count}条评论，点击查看</a></span>
                         </div>
                     </div>
                 </div>
+				<div class="huifulist" id="huifu${bbsComment.id}">
+                    <c:forEach items="${bbsComment.list}" var="BbsCommentReplyVo">
+                        <div class="cts">
+                                ${BbsCommentReplyVo.name}:${BbsCommentReplyVo.replycomment}<span>&nbsp;&nbsp;<fmt:formatDate value="${BbsCommentReplyVo.replytime}" pattern="yyyy-MM-dd HH:mm"/> </span>
+                        </div>
+                    </c:forEach>
+					<%--<div class="cts">
+						我也记得这个新闻，为楼主的钻研精神点赞~<span>2017/5/9</span>
+					</div>
+					<div class="cts">
+						我也记得这个新闻，为楼主的钻研精神点赞~<span>2017/5/9</span>
+					</div>--%>
+				</div>
             </c:forEach>
 
 			<div class="panigation">
@@ -104,10 +125,39 @@
                 bbsCommentForm.submit();
             });
         });
-		function replay(tag){
+		/*function replay(tag){
 			console.log($(tag).next());
 			$(tag).next().fadeToggle();
-		}
+		}*/
+        function replay(obj) {
+            var ids=$(obj).attr('id');
+            if($('#huifu'+ids).css('display')=='none'){
+                $('#huifu'+ids).show()
+            }else{
+                $('#huifu'+ids).hide()
+            }
+
+        }
+        function replays(obj){
+            var neirong=$(obj).prev().val();
+            if(neirong==null||neirong==""){
+                window.wxc.xcConfirm("回复内容不能为空！", window.wxc.xcConfirm.typeEnum.error);
+                return false;
+            }
+            //评论id
+            var commentid=$(obj).attr('id');
+            $.ajax({
+                type:"post",
+                url:"${pageContext.request.contextPath}/bbsComentReply/saveBbsCommentReply.action",
+                data:"replycomment="+neirong+"&commentid="+commentid+"&userid="+${user.id},
+                dataType:"json",
+                success:function(data){
+                    if(data==true){
+                        $(obj).parent().parent().prev().append('<br/>'+neirong);
+                    }
+                }
+            });
+        }
 	</script>
 </body>
 </html>

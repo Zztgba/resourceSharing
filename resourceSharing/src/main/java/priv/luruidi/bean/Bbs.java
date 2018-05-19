@@ -14,6 +14,7 @@ public class Bbs {
     private String notecontent;
     private Date notetime;
     private int userid;
+    private int state;
 
     public Integer getId() {
         return id;
@@ -61,5 +62,13 @@ public class Bbs {
 
     public void setUserid(int userid) {
         this.userid = userid;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 }

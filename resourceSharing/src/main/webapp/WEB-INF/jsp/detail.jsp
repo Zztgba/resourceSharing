@@ -25,16 +25,20 @@
 			//资源id
 			var resourceId=$("#resourceId").val();
 			$("#download").click(function(){
-				window.location.href="${pageContext.request.contextPath}/ResourceController/downloadResource.action?resourceid="+resourceId;
-				/* $.ajax({
-					url:"${pageContext.request.contextPath}/ResourceController/downloadResource.action",
+				//window.location.href="${pageContext.request.contextPath}/ResourceController/downloadResource.action?resourceid="+resourceId;
+				$.ajax({
+					url:"${pageContext.request.contextPath}/ScoreController/regScore.action",
 					type:"post",
 					data:"resourceid="+resourceId,
 					dataType:"json",
 					success:function(data){
-						
+						if(data.flag==true){
+                            window.location.href="${pageContext.request.contextPath}/ResourceController/downloadResource.action?resourceid="+resourceId
+                        }else{
+                            window.wxc.xcConfirm(data.mes, window.wxc.xcConfirm.typeEnum.error);
+                        }
 					}
-				}) */
+				})
 			});
 			
 			$("#collect").click(function(){
@@ -172,11 +176,11 @@
                 ${resource.description }
             </div>
             <div class="msg"> <!-- 评价信息-->
-                <span class="act">★</span>
-                <span class="act">★</span>
-                <span class="act">★</span>
-                <span class="act">★</span>
-                <span>★</span>
+                <span <c:if test="${star>=1}">class="act"</c:if>>★</span>
+                <span <c:if test="${star>=2}">class="act"</c:if>>★</span>
+                <span <c:if test="${star>=3}">class="act"</c:if>>★</span>
+                <span <c:if test="${star>=4}">class="act"</c:if>>★</span>
+                <span <c:if test="${star>=5}">class="act"</c:if>>★</span>
             </div>
             <div class="oper"> <!-- 下载操作-->
                 <span>所需积分：<b>${resource.score }</b></span>
