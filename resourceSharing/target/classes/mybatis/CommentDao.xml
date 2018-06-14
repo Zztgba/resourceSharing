@@ -15,7 +15,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into comment values(#{id},#{content},#{star},#{resourceid},#{userid},#{createTime})
 	</insert>
 	<select id="countCommentsByResourceIdAndUserId" resultType="int">
-		select count(id) from comment where resourceid=#{arg0} and userid=#{arg1}
+		select count(id) from comment where resourceid=#{0} and userid=#{1}
+	</select>
+	<select id="queryAvgStar" resultType="int">
+		SELECT
+	    avg(star)
+        FROM
+	    COMMENT
+        WHERE
+	    resourceid = #{resourid}
 	</select>
 </mapper>
 

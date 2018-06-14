@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="priv.luruidi.dao.BbsManagerDao">
+    <select id="queryBbsByStatuState" parameterType="priv.luruidi.bean.Bbs" resultType="priv.luruidi.bean.vo.BbsVo">
+        SELECT b.id,b.notesort,b.notename,b.notecontent,u.name,b.notetime
+        from bbs b LEFT JOIN user u on b.userid=u.id
+        where b.state=#{state} ORDER BY notetime DESC
+    </select>
+    <update id="updateBbsState" parameterType="priv.luruidi.bean.Bbs">
+        update bbs set state=#{state} where id=#{id}
+    </update>
+</mapper>
+
+
+
+
+
+
+
+

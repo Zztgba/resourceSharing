@@ -9,7 +9,7 @@
           left join user u
           on c.userid=u.id
           where c.bbsid=#{0}
-          order by c.commenttime desc
+          order by c.commenttime asc
           limit #{1.begin},#{1.pageSize}
     </select>
     <select id="countBbsCommentList" resultType="int">

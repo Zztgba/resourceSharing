@@ -12,15 +12,15 @@
         <result column="name" property="name"></result>
     </resultMap>
     <insert id="saveBbs" parameterType="priv.luruidi.bean.Bbs">
-        insert into bbs value(#{id},#{notesort},#{notename},#{notecontent},#{notetime},#{userid})
+        insert into bbs value(#{id},#{notesort},#{notename},#{notecontent},#{notetime},#{userid},0)
     </insert>
 
     <select id="queryBbsList" parameterType="priv.luruidi.util.Page" resultType="priv.luruidi.bean.vo.BbsVo">
-        select bbs.id,bbs.notesort,bbs.notename,bbs.notecontent,bbs.notetime,user.name from bbs left join user on bbs.userid=user.id order by bbs.notetime desc limit #{begin},#{pageSize}
+        select bbs.id,bbs.notesort,bbs.notename,bbs.notecontent,bbs.notetime,user.name from bbs left join user on bbs.userid=user.id where bbs.state=1 order by bbs.notetime desc limit #{begin},#{pageSize}
     </select>
 
     <select id="queryBbsListCount" resultType="int">
-        select count(id) from bbs
+        select count(id) from bbs where state=1
     </select>
     
     <select id="bbsDetail" resultType="priv.luruidi.bean.Bbs">

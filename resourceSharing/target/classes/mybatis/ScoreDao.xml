@@ -12,4 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="saveScoreByUserid">
 		insert into score values(#{id},#{userid},#{score},#{scoredate},#{scoresource})
 	</insert>
+	<select id="queryCountScoreByUserid" resultType="int" parameterType="priv.luruidi.bean.User">
+		SELECT
+	    sum(score)
+        FROM
+	    score
+        WHERE
+	    userid = #{id}
+	</select>
 </mapper>

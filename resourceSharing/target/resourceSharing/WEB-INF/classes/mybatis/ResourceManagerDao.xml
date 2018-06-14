@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="priv.luruidi.dao.ResourceManagerDao">
+    <select id="queryResourcesByStatuState" parameterType="priv.luruidi.bean.Resource" resultType="priv.luruidi.bean.vo.ResourceVo">
+        SELECT r. NAME,r.id,r.description,u. NAME uploadname,r.score,r.uploadtime
+        FROM resource r LEFT JOIN USER u ON r.userid = u.id where r.state=#{state} ORDER BY r.uploadtime desc
+    </select>
+    <update id="updateResourceState" parameterType="priv.luruidi.bean.Resource">
+        update resource set state=#{state} where id=#{id}
+    </update>
+</mapper>
+
+
+
+
+
+
+
+

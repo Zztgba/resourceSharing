@@ -16,5 +16,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mybatis/ScoreDao.xml"/>
 		<mapper resource="mybatis/BbsDao.xml"/>
 		<mapper resource="mybatis/BbsCommentDao.xml"/>
+		<mapper resource="mybatis/AdminUserDao.xml"/>
+        <mapper resource="mybatis/ResourceManagerDao.xml"/>
+        <mapper resource="mybatis/BbsManagerDao.xml"/>
+		<mapper resource="mybatis/BbsCommentReplyDao.xml"/>
 	</mappers>
 </configuration>

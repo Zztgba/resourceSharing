@@ -30,19 +30,19 @@
                     <label>用户名：</label>
                     <input id="name" class="upt" type="text" name="name" value="" />
 					<b id="nameb"></b>
-                    <b>账号可以包含字母，数字，下划线，不允许出现其他符号,长度3-16位</b>
+                    <b><%--账号可以包含字母，数字，下划线，不允许出现其他符号,长度3-16位--%></b>
                 </span>
                 <span>
                     <label>用户别名：</label>
                     <input id="alias" class="upt" type="text" name="nickname" value="" />
 					<b id="aliasb"></b>
-                    <b>别名可以包含字母，数字，下划线，不允许出现其他符号</b>
+                    <b><%--别名可以包含字母，数字，下划线，不允许出现其他符号--%></b>
                 </span>
                 <span>
                     <label>生日：</label>
-                    <input id="birth" class="Wdate upt" type="text" name="birth" value="" onFocus="WdatePicker({lang:'zh-cn',readOnly:true,dateFmt:'yyyy-MM-dd'})"/>
+                    <input id="birth" class="Wdate upt" type="text" name="birth" value="" onchange="birthRex()" onFocus="WdatePicker({lang:'zh-cn',readOnly:true,dateFmt:'yyyy-MM-dd'})"/>
 					<b id="birthb"></b>
-                    <b>年-月-日</b>
+                    <b><%--年-月-日--%></b>
                 </span>
                 <span>
                     <label>性别：</label>
@@ -82,6 +82,16 @@
 
     </div>
 	<script>
+        var $birthFlag=false;
+        function birthRex(){
+            var $birthVal=$("#birth").val();
+            if($birthVal==null||$birthVal==""){
+                $("#birthb").text("生日日期不能为空！");
+                return false;
+            }
+            $birthFlag=true;
+            $("#birthb").text("");
+        }
 		$(function(){
 			//头像验证 
 			var imageFlag=false;
@@ -92,7 +102,7 @@
 				var $suffixIndex=$image.val().lastIndexOf(".");
 				var $imageName=$image.val().substring($index+1);
 				var $suffixName=$image.val().substring($suffixIndex+1);
-				var allowImage=['jpg','png','jpeg','bmp','gif'];
+				var allowImage=['jpg','png','jpeg','bmp','gif','JPG','PNG','JPEG','BMP','GIF'];
 				for(var i=0;i<allowImage.length;i++){
 					if($suffixName===allowImage[i]){
 						$("#imageName").val($imageName);
@@ -110,7 +120,7 @@
 			//用户名验证
 			var nameFlag=false;
 			$("#name").blur(function(){
-				var $nameRex=/^[0-9a-zA-Z_]{3,16}$/;
+				/*var $nameRex=/^[0-9a-zA-Z_]{3,16}$/;
 				var $name=$("#name").val();
 				var $nameLen=$name.length;
 				if($nameLen<3){
@@ -121,30 +131,49 @@
 					$("#nameb").text("");
 					nameFlag=true;
 					$.ajax({
-						type:"post",
-						url:"${pageContext.request.contextPath }/UserController/rexName.action",
-						data:"name="+$name,
-						dataType:"json",
-						success:function(data){
-							if(data===false){
-								$("#nameb").text("");
-								nameFlag=true;
-							}else{
-								$("#nameb").text("用户名已被注册，请重新输入!");
-							}
-						}
-					});
+                        type:"post",
+                        url:"${pageContext.request.contextPath }/UserController/rexName.action",
+                        data:"name="+$name,
+                        dataType:"json",
+                        success:function(data){
+                            if(data===false){
+                                $("#nameb").text("");
+                                nameFlag=true;
+                            }else{
+                                $("#nameb").text("用户名已被注册，请重新输入!");
+                            }
+                        }
+                    });
 				}else{
 					$("#nameb").text("用户名格式不对，请重新输入!");
-				}
-				
-				
+				}*/
+                var $name=$("#name").val();
+                if($name==null||$name==""){
+                    $("#nameb").text("用户名不能为空，请输入用户名!");
+                    nameFlag=false;
+                    return false;
+                }
+				$.ajax({
+                    type:"post",
+                    url:"${pageContext.request.contextPath }/UserController/rexName.action",
+                    data:"name="+$name,
+                    dataType:"json",
+                    success:function(data){
+                        if(data===false){
+                            $("#nameb").text("");
+                            nameFlag=true;
+                        }else{
+                            $("#nameb").text("用户名已被注册，请重新输入!");
+                            nameFlag=false;
+                        }
+                    }
+                });
 			});
 			
 			//验证用户别名
 			var $nickname=false;
 			$("#alias").blur(function(){
-				var $nameRex=/^[0-9a-zA-Z_]{3,16}$/;
+				/*var $nameRex=/^[0-9a-zA-Z_]{3,16}$/;
 				var $name=$("#alias").val();
 				var $nameLen=$name.length;
 				if($nameLen<3){
@@ -156,12 +185,21 @@
 					$nickname=true;
 				}else{
 					$("#aliasb").text("用户名格式不对，请重新输入!");
-				}
+				}*/
+                var $name=$("#alias").val();
+                if($name==null||$name==""){
+                    $("#aliasb").text("用户别名不能为空，请输入用户别名!");
+                    $nickname=false;
+                    return false;
+                }
+                $("#aliasb").text("");
+                $nickname=true;
 			});
 			//验证生日
-			var $birthFlag=false;
+			/*var $birthFlag=false;
 			$("#birth").blur(function(){
 				var $birthVal=$("#birth").val();
+				console.log($birthVal);
 				var $RexBirth=/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/;
 				if($RexBirth.test($birthVal)){
 					$("#birthb").text("");
@@ -169,16 +207,23 @@
 				}else{
 					$("#birthb").text("生日日期不符合规则，请重新输入！");
 				}
-			});
+				if($birthVal==null||$birthVal==""){
+                    $("#birthb").text("生日日期不能为空！");
+                    return false;
+                }
+                $birthFlag=true;
+                $("#birthb").text("");
+				console.log($birthFlag);
+			});*/
 			//验证密码
 			var $pswFlag=false;
 			var $pswVal;
 			$("#password").blur(function(){
 				$pswVal=$("#password").val();
 				if($pswVal.length<6){
-					$("#passwordb").text("用户名过短，请重新输入!");
+					$("#passwordb").text("密码过短，请重新输入!");
 				}else if($pswVal.length>20){
-					$("#passwordb").text("用户名过长，请重新输入!");
+					$("#passwordb").text("密码过长，请重新输入!");
 				}else{
 					$("#passwordb").text("");
 					$pswFlag=true;
