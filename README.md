@@ -1,2 +1,2 @@
 # resouceSharing
-毕业设计
+资源共享系统
